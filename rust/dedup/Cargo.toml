@@ -1,0 +1,18 @@
+[package]
+name = "corpus-dedup"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "corpus_dedup"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# maturin turns on pyo3/extension-module (see pyproject.toml); leaving it off here lets `cargo test` link.
+pyo3 = { version = "0.30", features = ["abi3-py312"] }
+rayon = "1.12"
+xxhash-rust = { version = "0.8", features = ["xxh3"] }
+
+[profile.release]
+lto = true
+codegen-units = 1

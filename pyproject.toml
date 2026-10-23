@@ -1,0 +1,53 @@
+[project]
+name = "rag-llm-from-scratch"
+version = "0.1.0"
+description = "Train a retrieval-augmented LLM from scratch: corpus, tokenizer, pretraining, retrieval, inference."
+readme = "RUST_PYTHON.md"
+requires-python = ">=3.12"
+dependencies = [
+    # src/data_fetch
+    "feedparser>=6.0",
+    "mwparserfromhell>=0.6",
+    "py7zr>=0.22",
+    "requests>=2.32",
+    "trafilatura>=2.0",
+    "warcio>=1.7",
+    # src/data_fetch/filters.py: language ID (fastText lid.176) + Rust dedup
+    "fast-langdetect>=1.1",
+    "corpus-dedup",
+    # src/tokenizer: reference tokenizers (Rust-backed) to benchmark against
+    "tiktoken>=0.14",
+    "tokenizers>=0.23",
+    "transformers>=5.20",
+    # src/training, src/inference
+    "numpy>=2.1",
+    "torch>=2.5",
+    "wandb>=0.19",
+    "pydantic>=2.10",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29",
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
+
+[tool.uv]
+# Scripts under src/ run as-is. Rust crates under rust/ are separate maturin packages,
+# built and installed into .venv by `uv sync` (rebuilt when their .rs files change).
+package = false
+default-groups = ["dev"]
+
+[tool.uv.sources]
+corpus-dedup = { path = "rust/dedup", editable = true }
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

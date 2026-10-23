@@ -1,0 +1,17 @@
+[build-system]
+requires = ["maturin>=1.9,<2"]
+build-backend = "maturin"
+
+[project]
+name = "corpus-dedup"
+version = "0.1.0"
+description = "Exact + MinHash-LSH near-duplicate detection for the training corpus (Rust, PyO3)."
+requires-python = ">=3.12"
+
+[tool.maturin]
+module-name = "corpus_dedup"
+features = ["pyo3/extension-module"]
+
+[tool.uv]
+# Rebuild the extension whenever the Rust sources change.
+cache-keys = [{ file = "pyproject.toml" }, { file = "Cargo.toml" }, { file = "src/**/*.rs" }]
